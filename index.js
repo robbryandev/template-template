@@ -12,6 +12,7 @@ const parser = new ArgumentParser({
 
 parser.add_argument('-n', '--name', { help: 'sets project name' });
 parser.add_argument('-d', '--dest', { help: 'sets project destination' });
+parser.add_argument('-l', '--lang', { help: 'sets which language your template is for' });
 parser.add_argument('-t', '--temp', { help: 'sets which project template to use' });
 let args = parser.parse_args();
 
@@ -38,20 +39,24 @@ const replaceAllNames = function (src, fileMode) {
     });
 };
 
-if (!args.name || !args.dest || !args.temp) {
+if (!args.name || !args.dest || !args.lang || !args.temp) {
     console.log("Missing required parameters");
-    exit(1)
+    exit(1);
 }
 
-if (!fs.lstatSync(`./templates/${args.temp}`).isDirectory()) {
+if (!fs.lstatSync(`./templates/${args.lang}/${args.temp}`).isDirectory()) {
     console.log("invalid template");
     exit(2);
 }
 
-fs.copy(`./templates/${args.temp}`, `${args.dest}/${args.name}App.Solution`);
+fs.copy(`./templates/${args.lang}/${args.temp}`, `${args.dest}/${args.name}App.Solution`);
 setTimeout(() => {
-    replaceAllNames(`${args.dest}/${args.name}App.Solution`, false);
+    let replacePath = `${args.dest}/${args.name}`.replace("//", "/");
+    if (args.lang === "csharp") {
+        replacePath = replacePath + "App.Solution";
+    }
+    replaceAllNames(replacePath, false);
     setTimeout(() => {
-        replaceAllNames(`${args.dest}/${args.name}App.Solution`, true);
+        replaceAllNames(replacePath, true);
     }, 2000);
 }, 500);
