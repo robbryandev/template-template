@@ -1,0 +1,11 @@
+@using Microsoft.AspNetCore.Components
+
+<h1>Count @count</h1>
+<button @onclick="AddCount">+</button>
+
+@code {
+    public int count {get; set;} = 0;
+    public void AddCount() {
+        count++;
+    }
+}
