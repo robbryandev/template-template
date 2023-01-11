@@ -7,3 +7,5 @@ node ./index.js --name test --dest ~/Desktop --lang csharp --temp mvc
 * terminal
 * mvc
 * mvc_entity
+* entity_identity
+* entity_blazor
